@@ -9,14 +9,14 @@ spring:
     show-sql: true
     datasource:
       url: jdbc:mysql://localhost:3307/bankAccount?createDatabaseIfNotExist=true
-      username: root
-      password: root
+      username: bankuser
+      password: password
 
 kafka:
     listener:
         ack-mode: MANUAL_IMMEDIATE
     consumer:
-        bootstrap-servers: localhost:9093
+        bootstrap-servers: localhost:9092
         group-id: bankaccConsumer
         auto-offset-reset: earliest
         key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
