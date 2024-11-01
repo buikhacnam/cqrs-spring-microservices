@@ -5,13 +5,16 @@ import com.techbank.cqrs.cors.events.BaseEvent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
 import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AccountOpenEvent extends BaseEvent {
+@SuperBuilder
+public class AccountOpenedEvent extends BaseEvent {
     private String accountHolder;
     private AccountType accountType;
-    private Date creationDate;
+    private Date createdDate;
     private double openingBalance;
 }
