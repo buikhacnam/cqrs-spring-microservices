@@ -56,7 +56,7 @@ public abstract class AggregateRoot {
         applyChange(event, true);
     }
 
-    public void replayEvent(Iterable<BaseEvent> events) {
+    public void replayEvents(Iterable<BaseEvent> events) {
         for(var event : events) {
             applyChange(event, false);
         }
