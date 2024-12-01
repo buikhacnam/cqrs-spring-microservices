@@ -12,6 +12,7 @@ import java.util.Date;
 
 @NoArgsConstructor
 public class AccountAggregate extends AggregateRoot {
+
     private Boolean active;
     private double balance;
 
@@ -20,6 +21,7 @@ public class AccountAggregate extends AggregateRoot {
     }
 
     public AccountAggregate(OpenAccountCommand command) {
+        System.out.println("AccountAggregate - constructor: " + command.toString());
         raiseEvent(AccountOpenedEvent.builder()
                 .id(command.getId())
                 .accountHolder(command.getAccountHolder())
@@ -27,9 +29,27 @@ public class AccountAggregate extends AggregateRoot {
                 .accountType(command.getAccountType())
                 .openingBalance(command.getOpeningBalance())
                 .build());
+
+        //Multiple events can be raised in the constructor like:
+
+        // Second event - Welcome bonus added
+//        if (command.getOpeningBalance() >= 1000) {
+//            raiseEvent(WelcomeBonusAddedEvent.builder()
+//                    .id(command.getId())
+//                    .bonusAmount(50.0)
+//                    .build());
+//        }
+
+        // Third event - Account holder profile created
+//        raiseEvent(AccountHolderProfileCreatedEvent.builder()
+//                .id(command.getId())
+//                .holderName(command.getAccountHolder())
+//                .createdDate(new Date())
+//                .build());
     }
 
     public void apply(AccountOpenedEvent event) {
+        System.out.println("AccountAggregate - apply: " + event.toString());
         this.id = event.getId();
         this.active = true;
         this.balance = event.getOpeningBalance();

@@ -16,6 +16,7 @@ public class AccountEventHandler implements EventHandler {
 
     @Override
     public void on(AccountOpenedEvent event) {
+        System.out.println("AccountOpenedEvent on " + event.toString());
         var bankAccount = BankAccount.builder()
                 .id(event.getId())
                 .accountHolder(event.getAccountHolder())

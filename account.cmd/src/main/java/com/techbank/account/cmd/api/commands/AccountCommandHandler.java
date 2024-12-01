@@ -1,17 +1,26 @@
 package com.techbank.account.cmd.api.commands;
 
+import com.techbank.account.cmd.api.controllers.OpenAccountController;
 import com.techbank.account.cmd.domain.AccountAggregate;
 import com.techbank.cqrs.cors.handlers.EventSourcingHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.logging.Logger;
+
 @Service
 public class AccountCommandHandler implements CommandHandler {
+
+    private final Logger logger = Logger.getLogger(AccountCommandHandler.class.getName());
+
     @Autowired
     private EventSourcingHandler<AccountAggregate> eventSourcingHandler;
 
     @Override
     public void handle(OpenAccountCommand command) {
+        logger.info("AccountCommandHandler - handle: " + command.toString());
+        // create aggregate then call apply() to update its state
+        // event created in aggregate constructor is added to changes list in AggregateRoot
         var aggregate = new AccountAggregate(command);
         eventSourcingHandler.save(aggregate);
     }

@@ -11,7 +11,12 @@ import java.util.List;
 public abstract class AggregateRoot {
     protected String id;
     private int version = -1;
-
+//    The changes list serves as a temporary holding area for new events until they can be persisted to the event store. This is different from historical events which are replayed with isNewEvent=false and don't get added to the changes list.
+//    This pattern ensures:
+//    All state changes are tracked as events
+//    New events are collected before being persisted
+//    Events are only persisted once
+//    The aggregate's state remains consistent with its events
     private final List<BaseEvent> changes = new ArrayList<>();
     private final Logger logger = Logger.getLogger(AggregateRoot.class.getName());
 
@@ -28,6 +33,7 @@ public abstract class AggregateRoot {
     }
 
     public List<BaseEvent> getUncommittedChanges() {
+        logger.info("getUncommittedChanges: " + changes.stream().map(x -> x.getClass().getName()).reduce("", (x, y) -> x + ", " + y));
         return changes;
     }
 
@@ -38,6 +44,10 @@ public abstract class AggregateRoot {
     protected void applyChange(BaseEvent event, Boolean isNewEvent) {
         logger.info("Applying change: " + event);
         try {
+            //  Gets the runtime class of 'this' object (e.g., AccountAggregate)
+            // Searches for a method in this class with:
+            // - Method name "apply"
+            // - Parameter type matching the event's class (e.g., AccountOpenedEvent)
             var method = getClass().getDeclaredMethod("apply", event.getClass());
             method.setAccessible(true);
             method.invoke(this, event);
@@ -49,6 +59,7 @@ public abstract class AggregateRoot {
             if(isNewEvent) {
                 changes.add(event);
             }
+            logger.info("changes list: " + changes.stream().map(x -> x.getClass().getName()).reduce("", (x, y) -> x + ", " + y));
         }
     }
 

@@ -14,10 +14,42 @@ import java.util.Map;
 public class AccountCommandDispatcher implements CommandDispatcher {
     private final Map<Class<? extends BaseCommand>, List<CommandHandlerMethod>> routes = new HashMap<>();
 
+//   sampleRoutes = {
+//            OpenAccountCommand.class -> [
+//            commandHandler.handle(OpenAccountCommand)
+//            ],
+//
+//    DepositFundsCommand.class -> [
+//            commandHandler.handle(DepositFundsCommand)
+//            ],
+//
+//    WithdrawFundsCommand.class -> [
+//            commandHandler.handle(WithdrawFundsCommand)
+//            ],
+//
+//    CloseAccountCommand.class -> [
+//            commandHandler.handle(CloseAccountCommand)
+//            ],
+//
+//    RestoreReadDbCommand.class -> [
+//            commandHandler.handle(RestoreReadDbCommand)
+//            ]
+//}
+
     @Override
     public <T extends BaseCommand> void registerHandler(Class<T> type, CommandHandlerMethod<T> handler) {
+        //        List<CommandHandlerMethod> handlers;
+//        if (routes.containsKey(type)) {
+//            handlers = routes.get(type);  // handlers points to the list in routes
+//        } else {
+//            handlers = new LinkedList<>();  // create new list
+//            routes.put(type, handlers);    // put the list reference in routes
+//        }
+//        handlers.add(handler);  // modifies the list that routes points to
+
         var handlers = routes.computeIfAbsent(type, c -> new LinkedList<>());
         handlers.add(handler);
+
     }
 
     @Override
