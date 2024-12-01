@@ -27,6 +27,7 @@ public class DepositFundsController {
         try {
             command.setId(id);
             commandDispatcher.send(command);
+            System.out.println("DepositFundsController - depositFunds: done sending command");
             return new ResponseEntity<>(new BaseResponse("Deposit funds request completed successfully!"), HttpStatus.OK);
         } catch (IllegalStateException | AggregateNotFoundException e) {
             logger.log(Level.WARNING, MessageFormat.format("Client made a bad request - {0}.", e.toString()));

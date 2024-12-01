@@ -49,6 +49,7 @@ public class AccountEventStore implements EventStore {
                 eventProducer.produce(event.getClass().getSimpleName(), event);
             }
         }
+        System.out.println("saveEvents - end");
     }
 
     @Override

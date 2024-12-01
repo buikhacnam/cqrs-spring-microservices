@@ -27,6 +27,7 @@ public class WithdrawFundsController {
         try {
             command.setId(id);
             commandDispatcher.send(command);
+            System.out.println("WithdrawController done sending command");
             return new ResponseEntity<>(new BaseResponse("Withdraw funds request completed successfully!"), HttpStatus.OK);
         } catch (IllegalStateException | AggregateNotFoundException e) {
             logger.log(Level.WARNING, MessageFormat.format("Client made a bad request - {0}.", e.toString()));
