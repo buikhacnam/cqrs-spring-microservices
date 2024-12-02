@@ -19,8 +19,6 @@ public class AccountCommandHandler implements CommandHandler {
     @Override
     public void handle(OpenAccountCommand command) {
         logger.info("AccountCommandHandler - handle: " + command.toString());
-        // create aggregate then call apply() to update its state
-        // event created in aggregate constructor is added to changes list in AggregateRoot
         var aggregate = new AccountAggregate(command);
         eventSourcingHandler.save(aggregate);
     }

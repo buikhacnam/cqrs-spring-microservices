@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 @RestController
 @RequestMapping(path = "/api/v1/closeBankAccount")
 public class CloseAccountController {
-    private final Logger logger = Logger.getLogger(WithdrawFundsController.class.getName());
+    private final Logger logger = Logger.getLogger(CloseAccountController.class.getName());
 
     @Autowired
     private CommandDispatcher commandDispatcher;
