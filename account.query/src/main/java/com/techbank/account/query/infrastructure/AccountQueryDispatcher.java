@@ -1,7 +1,8 @@
-package com.techbank.cqrs.cors.infrastructure;
+package com.techbank.account.query.infrastructure;
 
 
 import com.techbank.cqrs.cors.domain.BaseEntity;
+import com.techbank.cqrs.cors.infrastructure.QueryDispatcher;
 import com.techbank.cqrs.cors.queries.BaseQuery;
 import com.techbank.cqrs.cors.queries.QueryHandlerMethod;
 import org.springframework.stereotype.Service;
