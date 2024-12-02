@@ -9,6 +9,7 @@ import com.techbank.cqrs.cors.exceptions.ConcurrencyException;
 import com.techbank.cqrs.cors.infrastructure.EventStore;
 import com.techbank.cqrs.cors.producers.EventProducer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -59,5 +60,17 @@ public class AccountEventStore implements EventStore {
             throw new AggregateNotFoundException("Incorrect account ID provided!");
         }
         return eventStream.stream().map(x -> x.getEventData()).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> getAggregateIds() {
+        var eventStream = eventStoreRepository.findAll();
+        if(eventStream == null || eventStream.isEmpty()) {
+            throw new AggregateNotFoundException("could not retrieve aggregate IDs");
+        }
+        return eventStream.stream()
+            .map(x -> x.getAggregateIdentifier())
+            .distinct()
+            .collect(Collectors.toList());
     }
 }

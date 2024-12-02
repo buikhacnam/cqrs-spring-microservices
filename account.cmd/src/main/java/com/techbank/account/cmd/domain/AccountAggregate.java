@@ -20,6 +20,10 @@ public class AccountAggregate extends AggregateRoot {
         return balance;
     }
 
+    public boolean getActive() {
+        return active;
+    }
+
     public AccountAggregate(OpenAccountCommand command) {
         System.out.println("AccountAggregate - constructor: " + command.toString());
         raiseEvent(AccountOpenedEvent.builder()
@@ -101,4 +105,6 @@ public class AccountAggregate extends AggregateRoot {
         this.id = event.getId();
         this.active = false;
     }
+
+
 }
