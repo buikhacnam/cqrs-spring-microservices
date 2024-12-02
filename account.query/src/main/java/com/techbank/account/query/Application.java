@@ -21,11 +21,11 @@ public class Application {
 	}
 
 
-//	@PostConstruct
-//	public void registerHandlers() {
-//		queryDispatcher.registerHandler(FindAllAccountsQuery.class, queryHandler::handle);
-//		queryDispatcher.registerHandler(FindAccountByIdQuery.class, queryHandler::handle);
-//		queryDispatcher.registerHandler(FindAccountByHolderQuery.class, queryHandler::handle);
-//		queryDispatcher.registerHandler(FindAccountWithBalanceQuery.class, queryHandler::handle);
-//	}
+	@PostConstruct
+	public void registerHandlers() {
+		queryDispatcher.registerHandler(FindAllAccountsQuery.class, queryHandler::handle);
+		queryDispatcher.registerHandler(FindAccountByIdQuery.class, queryHandler::handle);
+		queryDispatcher.registerHandler(FindAccountByHolderQuery.class, queryHandler::handle);
+		queryDispatcher.registerHandler(FindAccountWithBalanceQuery.class, queryHandler::handle);
+	}
 }
