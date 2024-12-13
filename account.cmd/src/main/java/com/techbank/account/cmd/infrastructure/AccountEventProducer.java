@@ -13,9 +13,8 @@ public class AccountEventProducer implements EventProducer {
 
     @Override
     public void produce(String topic, BaseEvent event) {
-        System.out.println("AccountEventProducer - produce: " + topic + " - " + event.toString());
-        //AccountEventProducer - produce: AccountOpenedEvent - AccountOpenedEvent(accountHolder=Casey1, accountType=SAVINGS, createdDate=Fri Nov 29 18:42:09 ICT 2024, openingBalance=55.0)
-        this.kafkaTemplate.send(topic, event);
+        this.kafkaTemplate.send(topic, event.getId(), event);
+
     }
 }
 
