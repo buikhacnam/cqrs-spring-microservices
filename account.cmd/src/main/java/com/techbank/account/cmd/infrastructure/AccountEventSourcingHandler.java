@@ -81,7 +81,7 @@ public class AccountEventSourcingHandler implements EventSourcingHandler<Account
 
     private void publishEventWithRetry(BaseEvent event, int retriesLeft) {
         try {
-            eventProducer.produce(event.getClass().getSimpleName(), event);
+            eventProducer.produce("BankAccountEvents", event);
         } catch (Exception e) {
             if (retriesLeft > 0) {
                 try {

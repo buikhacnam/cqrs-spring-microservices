@@ -47,7 +47,7 @@ public class AccountEventStore implements EventStore {
             var persistedEvent = eventStoreRepository.save(eventModel);
             if (!persistedEvent.getId().isEmpty()) {
                 System.out.println("AccountEventStore - saveEvents produce: " + event.toString());
-                eventProducer.produce(event.getClass().getSimpleName(), event);
+                eventProducer.produce("BankAccountEvents", event);
             }
         }
         System.out.println("saveEvents - end");

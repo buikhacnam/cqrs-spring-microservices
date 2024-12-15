@@ -11,8 +11,34 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AccountEventHandler implements EventHandler {
+
+    private static final int MAX_RETRIES = 3;
+    private static final long RETRY_DELAY_MS = 500;
+
     @Autowired
     private AccountRepository accountRepository;
+
+    private void retryOperation(String accountId, Runnable operation) {
+        int attempts = 0;
+        while (attempts < MAX_RETRIES) {
+            try {
+                operation.run();
+                return;
+            } catch (Exception e) {
+                attempts++;
+                if (attempts == MAX_RETRIES) {
+                    throw new RuntimeException("Failed to process event after " + MAX_RETRIES + " attempts for account: " + accountId);
+                }
+                try {
+                    Thread.sleep(RETRY_DELAY_MS);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException("Interrupted during retry", ie);
+                }
+            }
+        }
+    }
+
 
     @Override
     public void on(AccountOpenedEvent event) {
@@ -29,26 +55,30 @@ public class AccountEventHandler implements EventHandler {
 
     @Override
     public void on(FundsDepositedEvent event) {
-        var bankAccount = accountRepository.findById(event.getId());
-        if (bankAccount.isEmpty()) {
-            return;
-        }
-        var currentBalance = bankAccount.get().getBalance();
-        var latestBalance = currentBalance + event.getAmount();
-        bankAccount.get().setBalance(latestBalance);
-        accountRepository.save(bankAccount.get());
+        retryOperation(event.getId(), () -> {
+            var bankAccount = accountRepository.findById(event.getId());
+            if (bankAccount.isEmpty()) {
+                throw new RuntimeException("Account not found - possible race condition");
+            }
+            var currentBalance = bankAccount.get().getBalance();
+            var latestBalance = currentBalance + event.getAmount();
+            bankAccount.get().setBalance(latestBalance);
+            accountRepository.save(bankAccount.get());
+        });
     }
 
     @Override
     public void on(FundsWithdrawnEvent event) {
-        var bankAccount = accountRepository.findById(event.getId());
-        if (bankAccount.isEmpty()) {
-            return;
-        }
-        var currentBalance = bankAccount.get().getBalance();
-        var latestBalance = currentBalance - event.getAmount();
-        bankAccount.get().setBalance(latestBalance);
-        accountRepository.save(bankAccount.get());
+        retryOperation(event.getId(), () -> {
+            var bankAccount = accountRepository.findById(event.getId());
+            if (bankAccount.isEmpty()) {
+                throw new RuntimeException("Account not found - possible race condition");
+            }
+            var currentBalance = bankAccount.get().getBalance();
+            var latestBalance = currentBalance - event.getAmount();
+            bankAccount.get().setBalance(latestBalance);
+            accountRepository.save(bankAccount.get());
+        });
     }
 
     @Override
